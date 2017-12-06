@@ -57,6 +57,12 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
 
 } // evacuate
 
+int Evac::min(int a, int b)
+{
+  if(a <= b) return a;
+  else return b;
+} // min
+
 void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID)
 {
   for(int i = 0; i < srcCity.roadCount; i++)

@@ -17,14 +17,10 @@ private:
   int numCities;
   int time;
   void vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID);
+  int min(int a, int b);
 
 }; // class Evac
 
-int min(int a, int b)
-{
-  if(a <= b) return a;
-  else return b;
-}
 
 //int compare (const void * a, const void * b);
 
