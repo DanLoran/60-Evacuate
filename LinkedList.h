@@ -17,7 +17,6 @@
         // ListItr first( )       --> Return first position
         // void insert( x, p )    --> Insert x after current iterator position p
         // void remove( x )       --> Remove x
-        // void remove( p )       --> Remove the node at current iterator postion p
         // ListItr find( x )      --> Return position that views x
         // ListItr findPrevious( x )
         //                        --> Return position prior to x

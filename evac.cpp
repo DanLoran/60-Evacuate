@@ -7,6 +7,7 @@ using namespace std;
 
 Evac::Evac(City *citie, int numCitie, int numRoads) : numCities(numCitie), time(0)
 {
+  //change the name to cityAr later
   cityList = new City[numCities];
   for(int i = 0; i < numCities; i++)
   {
@@ -25,7 +26,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   }
   qsort(evacCity, numEvacs, sizeof(City), compare); //sort evacCities by pop
   UWTable cityDepth(numCities);*/
-  routeCount = 0;
+ routeCount = 0;
   List<City> evacCities;
   for(int i = 0; i < numEvacs; i++)
   {

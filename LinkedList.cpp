@@ -93,10 +93,9 @@
 /* 4*/      return ListItr<Object>( itr );
         }
 
-         /*
+        /**
          * Return iterator prior to the first node containing an item x.
          */
-
         template <class Object>
         ListItr<Object> List<Object>::findPrevious( const Object & x ) const
         {
