@@ -36,9 +36,9 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   cout << "made it to the start of the while loop" << endl;
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
-    cout << "while loop starting" << endl;
+    //cout << "while loop starting" << endl;
     ListItr<City> eCityItr = evacCities.zeroth();
-    while(eCityItr.isPastEnd())
+    while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
       City curECity = eCityItr.retrieve(); //get current evacCity
       vacateCity(curECity, routeCount, evacRoutes, -1, true); //pushes people out of all roads and generates evacRoutes
@@ -56,7 +56,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
       }
     }
     time++;
-    cout << "Time Incremented" << endl;
+    //cout << "Time Incremented" << endl;
   }
 
 } // evacuate
