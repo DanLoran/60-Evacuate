@@ -19,6 +19,9 @@ private:
   //Changed: now accepts bool isEvacCity.
   void vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity);
   int min(int a, int b);
+  void advanceItrs(ListItr &curItr, ListItr &prevItr);
+  void setItr(ListItr &curItr, ListItr &prevItr, List const &masterList);
+
 
 }; // class Evac
 

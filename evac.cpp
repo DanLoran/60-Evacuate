@@ -35,6 +35,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   routeCount = 0;
   List<City*> evacCities;
   ListItr<City*> eCityItr = evacCities.zeroth();
+  ListItr<City*> prevItr;
   for(int i = 0; i < numEvacs; i++)
   {
     evacCities.insert(&cityList[evacIDs[i]], eCityItr); //create linked list of evac cities
@@ -42,7 +43,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   cout << "made it to the start of the while loop" << endl;
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
-    eCityItr = evacCities.first();
+    setItr(eCityItr, prevItr, evacCities); //set to one before eCityItr to track what points the the current node
     //City curECity; //Tried this, met up with sigbert.
     //cout << "while loop starting" << endl;
     while(!eCityItr.isPastEnd())
@@ -56,13 +57,13 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
       if(curECity->evacuees <= 0 && curECity->population <= 0)
       {
         cout << "this shouldn't be triggering tho" << endl;
-        evacCities.removeNode(eCityItr);
+        evacCities.removeNode(prevItr);
         //itr does NOT need to be incremented because it now points to the node after the deleted node.
         //See LinkedList.cpp for more details.
       }
       else
       {
-        eCityItr.advance(); //incriment itr
+        advanceItrs(&eCityItr, &prevItr); //incriment itr
       }
     }
     time++;
@@ -71,6 +72,17 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
 
 } // evacuate
 
+void Evac::setItr(ListItr &curItr, ListItr &prevItr, List const &masterList)
+{
+  curItr = masterList.first();
+  prevItr = masterList.zeroth(); //set to one before curItr to track what points the the current node
+}
+
+void Evac::advanceItrs(ListItr &curItr, ListItr &prevItr)
+{
+  curItr.advance();
+  prevItr.advance();
+}
 int Evac::min(int a, int b)
 {
   if(a <= b) return a;
