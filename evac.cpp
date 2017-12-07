@@ -37,7 +37,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
     //cout << "while loop starting" << endl;
-    ListItr<City> eCityItr = evacCities.zeroth();
+    ListItr<City> eCityItr = evacCities.first();
     while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
       City curECity = eCityItr.retrieve(); //get current evacCity
