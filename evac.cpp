@@ -39,10 +39,10 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   {
     evacCities.insert(cityList[evacIDs[i]], eCityItr); //create linked list of evac cities
   }
-  eCityItr = evacCities.first();
   cout << "made it to the start of the while loop" << endl;
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
+    eCityItr = evacCities.first();
     //cout << "while loop starting" << endl;
     while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
@@ -53,6 +53,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
       //Changed: checks that evacuees and population are both <= 0.
       if(curECity.evacuees <= 0 && curECity.population <= 0)
       {
+        cout << "this shouldn't be triggering tho" << endl;
         evacCities.removeNode(eCityItr);
         //itr does NOT need to be incremented because it now points to the node after the deleted node.
         //See LinkedList.cpp for more details.
@@ -63,7 +64,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
       }
     }
     time++;
-    //cout << "Time Incremented" << endl;
+    cout << "Time Incremented" << endl;
   }
 
 } // evacuate
@@ -76,7 +77,7 @@ int Evac::min(int a, int b)
 
 //Should accept bool isEvacCity, set to true if srcCity is an evacCity.
 //Changed: now accepts a bool isEvacCity
-void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity)
+void Evac::vacateCity(City &srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity)
 {
   for(int i = 0; i < srcCity.roadCount; i++)
   {
@@ -130,6 +131,7 @@ void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int 
       }
     }
   }
+  //cout << "Finished the for loop boss" << endl;
 }
 /*int compare (const void * a, const void * b)
 {
