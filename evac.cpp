@@ -29,6 +29,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   UWTable cityDepth(numCities);*/
  routeCount = 0;
   List<City> evacCities;
+  ListItr<City> eCityItr = evacCities.zeroth();
   for(int i = 0; i < numEvacs; i++)
   {
     evacCities.insert(cityList[evacIDs[i]], evacCities.zeroth()); //create linked list of evac cities
@@ -37,7 +38,6 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
     //cout << "while loop starting" << endl;
-    ListItr<City> eCityItr = evacCities.first();
     while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
       City curECity = eCityItr.retrieve(); //get current evacCity
