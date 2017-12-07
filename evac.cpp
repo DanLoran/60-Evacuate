@@ -13,6 +13,7 @@ Evac::Evac(City *citie, int numCitie, int numRoads) : numCities(numCitie), time(
   for(int i = 0; i < numCities; i++)
   {
     cityList[i] = citie[i]; //sort by ID
+    cityList[i].roads = new Road[cityList[i].roadCount];
     for(int j = 0; j < citie[i].roadCount; j++) //deep copy all roads
     {
       cityList[i].roads[j] = citie[i].roads[j];
@@ -31,7 +32,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   }
   qsort(evacCity, numEvacs, sizeof(City), compare); //sort evacCities by pop
   UWTable cityDepth(numCities);*/
- routeCount = 0;
+  routeCount = 0;
   List<City> evacCities;
   ListItr<City> eCityItr = evacCities.zeroth();
   for(int i = 0; i < numEvacs; i++)
@@ -46,6 +47,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
     while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
       City curECity = eCityItr.retrieve(); //get current evacCity
+      //TODO: Instead of just passing ID of past city, should pass array of past ID cities.
       vacateCity(curECity, routeCount, evacRoutes, -1, true); //pushes people out of all roads and generates evacRoutes
       //REMOVE EVACCITY IF EMPTY
       //Changed: checks that evacuees and population are both <= 0.
