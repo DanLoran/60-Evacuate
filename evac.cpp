@@ -33,27 +33,27 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   qsort(evacCity, numEvacs, sizeof(City), compare); //sort evacCities by pop
   UWTable cityDepth(numCities);*/
   routeCount = 0;
-  List<City> evacCities;
-  ListItr<City> eCityItr = evacCities.zeroth();
+  List<City*> evacCities;
+  ListItr<City*> eCityItr = evacCities.zeroth();
   for(int i = 0; i < numEvacs; i++)
   {
-    evacCities.insert(cityList[evacIDs[i]], eCityItr); //create linked list of evac cities
+    evacCities.insert(&cityList[evacIDs[i]], eCityItr); //create linked list of evac cities
   }
   cout << "made it to the start of the while loop" << endl;
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
     eCityItr = evacCities.first();
-    City curECity;
+    //City curECity; //Tried this, met up with sigbert.
     //cout << "while loop starting" << endl;
     while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
       //TODO: create curECity outside of while loop.
-      curECity = eCityItr.retrieve(); //get current evacCity
+      City* curECity = eCityItr.retrieve(); //get current evacCity
       //TODO: Instead of just passing ID of past city, should pass array of past ID cities.
       vacateCity(curECity, routeCount, evacRoutes, -1, true); //pushes people out of all roads and generates evacRoutes
       //REMOVE EVACCITY IF EMPTY
       //Changed: checks that evacuees and population are both <= 0.
-      if(curECity.evacuees <= 0 && curECity.population <= 0)
+      if(curECity->evacuees <= 0 && curECity->population <= 0)
       {
         cout << "this shouldn't be triggering tho" << endl;
         evacCities.removeNode(eCityItr);
@@ -79,13 +79,13 @@ int Evac::min(int a, int b)
 
 //Should accept bool isEvacCity, set to true if srcCity is an evacCity.
 //Changed: now accepts a bool isEvacCity
-void Evac::vacateCity(City &srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity)
+void Evac::vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity)
 {
-  for(int i = 0; i < srcCity.roadCount; i++)
+  for(int i = 0; i < srcCity->roadCount; i++)
   {
-    Road curRoad = srcCity.roads[i];
-    City dstCity = cityList[curRoad.destinationCityID];
-    if(dstCity.ID != prevCityID) //make sure we don't send back to who called us
+    Road curRoad = srcCity->roads[i];
+    City* dstCity = &cityList[curRoad.destinationCityID];
+    if(dstCity->ID != prevCityID) //make sure we don't send back to who called us
     {
       //create and store evacRoute
       int pplMoved;
@@ -94,40 +94,40 @@ void Evac::vacateCity(City &srcCity, int &routeCount, EvacRoute *evacRoutes, int
       eRoute.roadID = curRoad.ID;
       eRoute.time = time;
 
-      if(curRoad.peoplePerHour < dstCity.population - dstCity.evacuees)
+      if(curRoad.peoplePerHour < dstCity->population - dstCity->evacuees)
       { //we have room in the dest city
       //Changed: this line to sum srcCity evacuees and population if isEvacCity?
       //This questionable multiplication only adds srcCity's population if its an evacCity, without an if check.
-        pplMoved = min(curRoad.peoplePerHour, (srcCity.evacuees + (srcCity.population * isEvacCity) ) ); //Makes sure that we don't remove more people than the source city contains
+        pplMoved = min(curRoad.peoplePerHour, (srcCity->evacuees + (srcCity->population * isEvacCity) ) ); //Makes sure that we don't remove more people than the source city contains
       }
       else
       { //we dont have room in the dest city
-        vacateCity(dstCity, routeCount, evacRoutes, srcCity.ID, false); //move people out of dstCity
-        pplMoved = min(curRoad.peoplePerHour, dstCity.population - dstCity.evacuees); //find max people that can move to dstCity
+        vacateCity(dstCity, routeCount, evacRoutes, srcCity->ID, false); //move people out of dstCity
+        pplMoved = min(curRoad.peoplePerHour, dstCity->population - dstCity->evacuees); //find max people that can move to dstCity
         //See earlier comment about questionable multiplcation
-        pplMoved = min(pplMoved, (srcCity.evacuees + (srcCity.population * isEvacCity) ) ); //Makes sure that we don't remove more people than the source city contains
+        pplMoved = min(pplMoved, (srcCity->evacuees + (srcCity->population * isEvacCity) ) ); //Makes sure that we don't remove more people than the source city contains
       }
       //update evacuees that have moved
       //Changed: If isEvacCity is true, we need to first subtract from evacuees and then population. This if/else block.
       eRoute.numPeople = pplMoved;
 
-      if(!isEvacCity || srcCity.evacuees >= pplMoved)
+      if(!isEvacCity || srcCity->evacuees >= pplMoved)
       {
-        srcCity.evacuees -= pplMoved;
+        srcCity->evacuees -= pplMoved;
       }
       else
       {
         //First send off the evacuees, then the population.
-        pplMoved -= srcCity.evacuees;
-        srcCity.evacuees = 0;
-        srcCity.population -= pplMoved;
+        pplMoved -= srcCity->evacuees;
+        srcCity->evacuees = 0;
+        srcCity->population -= pplMoved;
       }
       //Regardless of isEvacCity, dstCity is always treated the same.
-      dstCity.evacuees += pplMoved;
+      dstCity->evacuees += pplMoved;
 
       evacRoutes[routeCount] = eRoute;
       routeCount++;
-      if(srcCity.evacuees + (srcCity.population * isEvacCity) <= 0)
+      if(srcCity->evacuees + (srcCity->population * isEvacCity) <= 0)
       {
         return; //Stop looking through roads if srcCity has no one left 0.
       }

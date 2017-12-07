@@ -101,7 +101,7 @@
         {
 /* 1*/      ListNode<Object> *itr = header;
 
-/* 2*/      while( itr->next != NULL && itr->next->element.ID != x.ID )
+/* 2*/      while( itr->next != NULL && itr->next->element->ID != x->ID )
 /* 3*/          itr = itr->next;
 
 /* 4*/      return ListItr<Object>( itr );
