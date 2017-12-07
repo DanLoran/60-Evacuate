@@ -39,9 +39,10 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
     while(eCityItr.isPastEnd())
     { //we havent reached end of linked list
       City curECity = eCityItr.retrieve(); //get current evacCity
-      vacateCity(curECity, routeCount, evacRoutes, -1); //pushes people out of all roads and generates evacRoutes
+      vacateCity(curECity, routeCount, evacRoutes, -1, true); //pushes people out of all roads and generates evacRoutes
       //REMOVE EVACCITY IF EMPTY
-      if(curECity.evacuees <= 0)
+      //Changed: checks that evacuees and population are both <= 0.
+      if(curECity.evacuees <= 0 && curECity.population <= 0)
       {
         evacCities.removeNode(eCityItr);
         //itr does NOT need to be incremented because it now points to the node after the deleted node.
@@ -63,7 +64,9 @@ int Evac::min(int a, int b)
   else return b;
 } // min
 
-void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID)
+//Should accept bool isEvacCity, set to true if srcCity is an evacCity.
+//Changed: now accepts a bool isEvacCity
+void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity)
 {
   for(int i = 0; i < srcCity.roadCount; i++)
   {
@@ -79,18 +82,40 @@ void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int 
 
       if(curRoad.peoplePerHour < dstCity.population - dstCity.evacuees)
       { //we have room in the dest city
-        pplMoved = min(curRoad.peoplePerHour, srcCity.evacuees); //Makes sure that we don't remove more people than the source city contains
+      //Changed: this line to sum srcCity evacuees and population if isEvacCity?
+      //This questionable multiplication only adds srcCity's population if its an evacCity, without an if check.
+        pplMoved = min(curRoad.peoplePerHour, (srcCity.evacuees + (srcCity.population * isEvacCity))); //Makes sure that we don't remove more people than the source city contains
       }
       else
       { //we dont have room in the dest city
-        vacateCity(dstCity, routeCount, evacRoutes, srcCity.ID); //move people out of dstCity
+        vacateCity(dstCity, routeCount, evacRoutes, srcCity.ID, false); //move people out of dstCity
         pplMoved = min(curRoad.peoplePerHour, dstCity.population - dstCity.evacuees); //find max people that can move to dstCity
         pplMoved = min(pplMoved, srcCity.evacuees); //Makes sure that we don't remove more people than the source city contains
       }
       //update evacuees that have moved
+      //Changed: If isEvacCity is true, we need to first subtract from evacuees and then population. This if/else block.
       curRoute.numPeople = pplMoved;
-      srcCity.evacuees -= pplMoved;
+      if(isEvacCity)
+      {
+        if(srcCity.evacuees >= pplMoved)
+        {
+          srcCity.evacuees -= pplMoved;
+        }
+        else
+        {
+          pplMoved -= srcCity.evacuees;
+          srcCity.evacuees = 0;
+          srcCity.population -= pplMoved;
+
+        }
+      }
+      else
+      {
+        srcCity.evacuees -= pplMoved;
+      }
+      //Regardless of isEvacCity, dstCity is always treated the same.
       dstCity.evacuees += pplMoved;
+
       evacRoutes[routeCount] = curRoute;
       routeCount++;
       if(srcCity.evacuees <= 0)

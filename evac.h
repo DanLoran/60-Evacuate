@@ -16,7 +16,8 @@ private:
   City* cityList;
   int numCities;
   int time;
-  void vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID);
+  //Changed: now accepts bool isEvacCity.
+  void vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity);
   int min(int a, int b);
 
 }; // class Evac
