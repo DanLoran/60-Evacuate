@@ -12,7 +12,11 @@ Evac::Evac(City *citie, int numCitie, int numRoads) : numCities(numCitie), time(
   cityList = new City[numCities];
   for(int i = 0; i < numCities; i++)
   {
-    cityList[citie[i].ID] = citie[i]; //sort by ID
+    cityList[i] = citie[i]; //sort by ID
+    for(int j = 0; j < citie[i].roadCount; j++) //deep copy all roads
+    {
+      cityList[i].roads[j] = citie[i].roads[j];
+    }
   }
 } // Evac()
 
