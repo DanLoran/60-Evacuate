@@ -43,10 +43,12 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
     eCityItr = evacCities.first();
+    City curECity;
     //cout << "while loop starting" << endl;
     while(!eCityItr.isPastEnd())
     { //we havent reached end of linked list
-      City curECity = eCityItr.retrieve(); //get current evacCity
+      //TODO: create curECity outside of while loop.
+      curECity = eCityItr.retrieve(); //get current evacCity
       //TODO: Instead of just passing ID of past city, should pass array of past ID cities.
       vacateCity(curECity, routeCount, evacRoutes, -1, true); //pushes people out of all roads and generates evacRoutes
       //REMOVE EVACCITY IF EMPTY
