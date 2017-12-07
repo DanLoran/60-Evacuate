@@ -32,8 +32,9 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   ListItr<City> eCityItr = evacCities.zeroth();
   for(int i = 0; i < numEvacs; i++)
   {
-    evacCities.insert(cityList[evacIDs[i]], evacCities.zeroth()); //create linked list of evac cities
+    evacCities.insert(cityList[evacIDs[i]], eCityItr); //create linked list of evac cities
   }
+  eCityItr = evacCities.first();
   cout << "made it to the start of the while loop" << endl;
   while(!(evacCities.isEmpty())) //check if header is null to see if we still have evac cities with people in them
   {
