@@ -2,6 +2,7 @@
 #include "evac.h"
 #include "EvacRunner.h"
 #include "LinkedList.h"
+#include <iostream>
 
 using namespace std;
 
@@ -54,6 +55,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
       }
     }
     time++;
+    cout << "Time Incremented" << endl;
   }
 
 } // evacuate
@@ -76,51 +78,46 @@ void Evac::vacateCity(City srcCity, int &routeCount, EvacRoute *evacRoutes, int 
     {
       //create and store evacRoute
       int pplMoved;
-      EvacRoute curRoute;
-      curRoute.roadID = curRoad.ID;
-      curRoute.time = time;
+      EvacRoute eRoute;
+      eRoute.roadID = curRoad.ID;
+      eRoute.time = time;
 
       if(curRoad.peoplePerHour < dstCity.population - dstCity.evacuees)
       { //we have room in the dest city
       //Changed: this line to sum srcCity evacuees and population if isEvacCity?
       //This questionable multiplication only adds srcCity's population if its an evacCity, without an if check.
-        pplMoved = min(curRoad.peoplePerHour, (srcCity.evacuees + (srcCity.population * isEvacCity))); //Makes sure that we don't remove more people than the source city contains
+        pplMoved = min(curRoad.peoplePerHour, (srcCity.evacuees + (srcCity.population * isEvacCity) ) ); //Makes sure that we don't remove more people than the source city contains
       }
       else
       { //we dont have room in the dest city
         vacateCity(dstCity, routeCount, evacRoutes, srcCity.ID, false); //move people out of dstCity
         pplMoved = min(curRoad.peoplePerHour, dstCity.population - dstCity.evacuees); //find max people that can move to dstCity
-        pplMoved = min(pplMoved, srcCity.evacuees); //Makes sure that we don't remove more people than the source city contains
+        //See earlier comment about questionable multiplcation
+        pplMoved = min(pplMoved, (srcCity.evacuees + (srcCity.population * isEvacCity) ) ); //Makes sure that we don't remove more people than the source city contains
       }
       //update evacuees that have moved
       //Changed: If isEvacCity is true, we need to first subtract from evacuees and then population. This if/else block.
-      curRoute.numPeople = pplMoved;
-      if(isEvacCity)
-      {
-        if(srcCity.evacuees >= pplMoved)
-        {
-          srcCity.evacuees -= pplMoved;
-        }
-        else
-        {
-          pplMoved -= srcCity.evacuees;
-          srcCity.evacuees = 0;
-          srcCity.population -= pplMoved;
+      eRoute.numPeople = pplMoved;
 
-        }
+      if(!isEvacCity || srcCity.evacuees >= pplMoved)
+      {
+        srcCity.evacuees -= pplMoved;
       }
       else
       {
-        srcCity.evacuees -= pplMoved;
+        //First send off the evacuees, then the population.
+        pplMoved -= srcCity.evacuees;
+        srcCity.evacuees = 0;
+        srcCity.population -= pplMoved;
       }
       //Regardless of isEvacCity, dstCity is always treated the same.
       dstCity.evacuees += pplMoved;
 
-      evacRoutes[routeCount] = curRoute;
+      evacRoutes[routeCount] = eRoute;
       routeCount++;
-      if(srcCity.evacuees <= 0)
+      if(srcCity.evacuees + (srcCity.population * isEvacCity) <= 0)
       {
-        return; //End this if srcCity is 0.
+        return; //Stop looking through roads if srcCity has no one left 0.
       }
     }
   }
