@@ -37,6 +37,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
   {
     evacCities[i] = &cityList[evacIDs[i]]; //create linked list of evac cities
   }
+  calcDepth(numEvacs);
   //cout << "made it to the start of the while loop" << endl;
   while(remainingEvacs > 0) //check if header is null to see if we still have evac cities with people in them
   {
