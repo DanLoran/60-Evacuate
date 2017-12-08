@@ -228,13 +228,17 @@ void Evac::vacateCity(City *srcCity, int &routeCount, EvacRoute *evacRoutes)
 
 bool Evac::validERoute(bool isInternal, City* srcCity, City* dstCity, Road curRoad)
 {
-  if(!isInternal && (cityDepth[srcCity->ID] >= cityDepth[dstCity->ID]
-     || !roadsUsed[curRoad.ID] || (dstCity->population > 0)))
+  if(roadsUsed[curRoad.ID])
   {
     return false;
   }
-  else
+  if(!isInternal && (cityDepth[srcCity->ID] >= cityDepth[dstCity->ID]))
   {
-    return true;
+    return false;
   }
+  else if (dstCity->population <= 0)
+  {
+    return false;
+  }
+  return true;
 }
