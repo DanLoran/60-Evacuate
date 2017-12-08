@@ -59,7 +59,7 @@
             ListItr<Object> find( const Object & x ) const;
             ListItr<Object> findPrevious( const Object & x ) const;
             void remove( const Object & x );
-            void removeNode( const ListItr<Object> & p );
+            void removeNode( const ListItr<Object> & prev, ListItr<Object> & cur);
 
             const List & operator=( const List & rhs );
 

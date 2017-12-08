@@ -124,12 +124,12 @@
         }
 
         template <class Object>
-        void List<Object>::removeNode( const ListItr<Object> & prev, const ListItr<Object> & cur)
+        void List<Object>::removeNode( const ListItr<Object> & prev, ListItr<Object> & cur)
         { //we must be given the itr one before the item to be deleted
 
           if( prev.current->next != NULL )
           {
-              cur.advance(); //itr now points to prev current next next 
+              cur.advance(); //itr now points to prev current next next
               ListNode<Object> *oldNode = prev.current->next;
               prev.current->next = prev.current->next->next;  // Bypass deleted node
               delete oldNode;

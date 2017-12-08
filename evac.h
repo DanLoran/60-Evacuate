@@ -3,24 +3,28 @@
 #define evacH
 
 #include "EvacRunner.h"
-
+#include "LinkedList.h"
 
 class Evac
 {
 public:
-  Evac(City *cities, int numCities, int numRoads);
+  Evac(City *citie, int numCitie, int numRoad);
   void evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
     int &routeCount); // student sets evacRoutes and routeCount
 
 private:
   City* cityList;
+  bool* roadsUsed;
   int numCities;
+  int numRoads;
   int time;
+
   //Changed: now accepts bool isEvacCity.
-  void vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes, int prevCityID, bool isEvacCity);
+  void vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes, bool isEvacCity);
   int min(int a, int b);
-  void advanceItrs(ListItr &curItr, ListItr &prevItr);
-  void setItr(ListItr &curItr, ListItr &prevItr, List const &masterList);
+  void advanceItrs(ListItr<City*> &curItr, ListItr<City*> &prevItr);
+  void resetUsed();
+  void setItr(ListItr<City*> &curItr, ListItr<City*> &prevItr, List<City*> const &masterList);
 
 
 }; // class Evac
