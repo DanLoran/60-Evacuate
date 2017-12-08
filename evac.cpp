@@ -143,6 +143,7 @@ bool Evac::vacateEvac(City *srcCity, int &routeCount, EvacRoute *evacRoutes)
         pplMoved = min(pplMoved, (srcCity->evacuees + srcCity->population) ); //Makes sure that we don't remove more people than the source city contains
       }
 
+      eRoute.numPeople = pplMoved;
       dstCity->evacuees += pplMoved;
 
       if(srcCity->evacuees >= pplMoved)
