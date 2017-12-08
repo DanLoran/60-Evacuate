@@ -15,15 +15,20 @@ public:
 private:
   City* cityList;
   bool* roadsUsed;
+  City** evacCities;
+  int* cityDepth;
   int numCities;
   int numRoadIDs;
   int time;
   int remainingEvacs;
 
-  //Changed: now accepts bool isEvacCity.
-  void vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes, bool isEvacCity);
+  bool vacateEvac(City *srcCity, int &routeCount, EvacRoute *evacRoutes); //returns if srcCity empties
+  void vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes);
   int min(int a, int b);
   void resetUsed();
+  bool checkInternal(City* internal);
+  void calcDepth(int numEvacs);
+  bool validERoute(bool isInternal, City* srcCity, City* dstCity, Road curRoad);
 
 }; // class Evac
 
