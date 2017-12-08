@@ -35,7 +35,7 @@ void Evac::evacuate(int *evacIDs, int numEvacs, EvacRoute *evacRoutes,
 
   for(int i = 0; i < numEvacs; i++)
   {
-    evacCities[i] = &cityList[evacIDs[i]]; //create linked list of evac cities
+    evacCities[i] = &cityList[evacIDs[i]]; //create array of evac cities
   }
   calcDepth(numEvacs);
   //cout << "made it to the start of the while loop" << endl;
@@ -71,10 +71,11 @@ int Evac::min(int a, int b)
 
 void Evac::resetUsed()
 { //no cities have been visited
-  for(int i = 0; i < numRoadIDs; i++)
+  memset(roadsUsed, false, (sizeof(bool)*numRoadIDs));
+  /*for(int i = 0; i < numRoadIDs; i++)
   {
     roadsUsed[i] = false;
-  }
+  }*/
 }
 
 void Evac::calcDepth(int numEvacs)
