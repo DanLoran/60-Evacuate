@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Evac::Evac(City *citie, int numCitie, int numRoad) : numCities(numCitie), numRoads(numRoad), time(1)
+Evac::Evac(City *citie, int numCitie, int numRoad) : numCities(numCitie), numRoadIDs(numRoad * 2), time(1)
 {
   //change the name to cityAr later
   cityList = new City[numCities];
@@ -19,7 +19,7 @@ Evac::Evac(City *citie, int numCitie, int numRoad) : numCities(numCitie), numRoa
       cityList[i].roads[j] = citie[i].roads[j];
     }
   }
-  roadsUsed = new bool[numRoads]();
+  roadsUsed = new bool[numRoadIDs]();
 } // Evac()
 
 
@@ -67,7 +67,7 @@ int Evac::min(int a, int b)
 
 void Evac::resetUsed()
 { //no cities have been visited
-  for(int i = 0; i < numRoads; i++)
+  for(int i = 0; i < numRoadIDs; i++)
   {
     roadsUsed[i] = false;
   }
@@ -75,7 +75,7 @@ void Evac::resetUsed()
 
 //Should accept bool isEvacCity, set to true if srcCity is an evacCity.
 //Changed: now accepts a bool isEvacCity
-void Evac::vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes, bool isEvacCity)
+void Evac::vacateCity(City *srcCity, int &routeCount, EvacRoute *evacRoutes, bool isEvacCity)
 {
   for(int i = 0; i < srcCity->roadCount; i++)
   {

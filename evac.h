@@ -16,7 +16,7 @@ private:
   City* cityList;
   bool* roadsUsed;
   int numCities;
-  int numRoads;
+  int numRoadIDs;
   int time;
   int remainingEvacs;
 
