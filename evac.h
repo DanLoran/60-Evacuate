@@ -24,11 +24,13 @@ private:
 
   bool vacateEvac(City *srcCity, int &routeCount, EvacRoute *evacRoutes); //returns if srcCity empties
   void vacateCity(City* srcCity, int &routeCount, EvacRoute *evacRoutes);
+  bool Evac::checkEvacs();
   int min(int a, int b);
   void resetUsed();
   bool checkInternal(City* internal);
   void calcDepth(int numEvacs);
   bool validERoute(bool isInternal, City* srcCity, City* dstCity, Road curRoad);
+  //bool finalSprint;
 
 }; // class Evac
 
