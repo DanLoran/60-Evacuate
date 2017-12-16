@@ -144,7 +144,7 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
           continue; //don't make evacRoute
         }
         //we have people to put in our evacRoute
-        if(pplMoved = 0)
+        if(pplMoved == 0)
         {
           cout << "WE FUCKED UP BOYS" << endl;
         }
@@ -165,7 +165,7 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         evacRoutes[routeCount] = eRoute;
         routeCount++;
 
-        if((curCity->evacuees + curCity->population) <= 0)
+        if((curCity->evacuees + (curCity->population * curCity->isEvacCity)) <= 0)
         {
           break; //Stop looking through roads if srcCity has no one left 0.
         }
