@@ -3,7 +3,6 @@
 #define evacH
 
 #include "EvacRunner.h"
-#include "LinkedList.h"
 
 class MyCity
 {
