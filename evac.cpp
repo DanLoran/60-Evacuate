@@ -96,7 +96,7 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
       if(evacCities[i]->population + evacCities[i]->evacuees > 0)
       { //we have people in this city
         cityVisited[evacCities[i]->ID] = true; //mark each added city as visited.
-        bfsQueue.enqueue(&cityList[i]);
+        bfsQueue.enqueue(evacCities[i]);
       }
     }
     else
