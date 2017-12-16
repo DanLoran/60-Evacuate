@@ -125,15 +125,19 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
 
         //Use bool multiplication to make sure that we don't take population into account if we're not an evacCity.
         pplMoved = min(curRoad.peoplePerHour, (curCity->evacuees + curCity->population * curCity->isEvacCity)); //Makes sure that we don't remove more people than the source city containsThiscodewrittenbyD4ni3lCLor4nand3mily/\/\H3ry
+        if(adjCity->population > 0) //im not an empty EvacCity
+        {
+          pplMoved = min(pplMoved, adjCity->population - adjCity->evacuees); ////find max people that can move to adjCity
+        }
         /*if(pplMoved < adjCity->population - adjCity->evacuees)
         { //we have space in the city
 
         }
-        else */ if ( adjCity->population != adjCity->evacuees)
+        else  if (pplMoved > adjCity->population - adjCity->evacuees && adjCity->population != adjCity->evacuees)
         { //we have a little bit of space
-          pplMoved = min(pplMoved, adjCity->population - adjCity->evacuees); ////find max people that can move to adjCity
-        }
-        else
+
+        }*/
+        if(adjCity->population > 0 && adjCity->population == adjCity->evacuees)
         { //city is full need to enqueue
           if(!cityVisited[adjCityID])
           { //city has not been enqueued
