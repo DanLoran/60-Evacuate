@@ -12,6 +12,7 @@ MyCity MyCity::operator = (City const &oldCity)
   ID = oldCity.ID;
   x = oldCity.x;
   y = oldCity.y;
+
   roadCount = oldCity.roadCount;
   population = oldCity.population;
   evacuees = oldCity.evacuees;
@@ -53,6 +54,9 @@ void Evac::evacuate(int *evacIDs, int numEvac, EvacRoute *evacRoutes,
   {
     evacCities[i] = &cityList[evacIDs[i]]; //create array of evac cities
     evacCities[i]->isEvacCity = true;
+    //CHANGED: pop is now times two and evacs is people that need to leave
+    evacCities[i]->evacuees = evacCities[i]->population;
+    evacCities[i]->population *= 2;
   }
 
   calcDepth(numEvacs);
@@ -94,7 +98,7 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
   {
     if(evacCities[i]->depth == minDepth)
     {
-      if(evacCities[i]->population + evacCities[i]->evacuees > 0)
+      if(evacCities[i]->evacuees > 0) //CHANGED: only check evacuees
       { //we have people in this city
         cityVisited[evacCities[i]->ID] = true; //mark each added city as visited.
         bfsQueue.enqueue(evacCities[i]);
@@ -124,11 +128,10 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         eRoute.time = time;
 
         //Use bool multiplication to make sure that we don't take population into account if we're not an evacCity.
-        pplMoved = min(curRoad.peoplePerHour, (curCity->evacuees + curCity->population * curCity->isEvacCity)); //Makes sure that we don't remove more people than the source city containsThiscodewrittenbyD4ni3lCLor4nand3mily/\/\H3ry
-        if(adjCity->population > 0) //im not an empty EvacCity
-        {
-          pplMoved = min(pplMoved, adjCity->population - adjCity->evacuees); ////find max people that can move to adjCity
-        }
+        pplMoved = min(curRoad.peoplePerHour, curCity->evacuees); //Makes sure that we don't remove more people than the source city containsThiscodewrittenbyD4ni3lCLor4nand3mily/\/\H3ry
+        //CHANGED: no need to check pop, its always > 0
+        pplMoved = min(pplMoved, adjCity->population - adjCity->evacuees); ////find max people that can move to adjCity
+
         /*if(pplMoved < adjCity->population - adjCity->evacuees)
         { //we have space in the city
 
@@ -137,7 +140,7 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         { //we have a little bit of space
 
         }*/
-        if(adjCity->population > 0 && adjCity->population == adjCity->evacuees)
+        if(adjCity->population == adjCity->evacuees)
         { //city is full need to enqueue
           if(!cityVisited[adjCityID])
           { //city has not been enqueued
@@ -154,28 +157,20 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         }
         eRoute.numPeople = pplMoved;
         adjCity->evacuees += pplMoved;
+        //CHANGED: no need to check if we need to remove people from population
+        curCity->evacuees -= pplMoved;
 
-        if(curCity->evacuees >= pplMoved)
-        {
-          curCity->evacuees -= pplMoved;
-        }
-        else
-        {
-          //First send off the evacuees, then the population.
-          pplMoved -= curCity->evacuees;
-          curCity->evacuees = 0;
-          curCity->population -= pplMoved;
-        }
         evacRoutes[routeCount] = eRoute;
         routeCount++;
         //add adjCity to the queue if need be.
-        if(!cityVisited[adjCityID] && (adjCity->evacuees + (adjCity->population * adjCity->isEvacCity)) > 0)
+        //CHANGED: no need to add pop if evacCity
+        if(!cityVisited[adjCityID] && adjCity->evacuees > 0)
         { //city has not been enqueued
           bfsQueue.enqueue(adjCity);
           cityVisited[adjCityID] = true; //now its been visited
         }
-
-        if((curCity->evacuees + (curCity->population * curCity->isEvacCity)) <= 0)
+        //no need to add pop if evacCity
+        if(curCity->evacuees <= 0)
         {
           break; //Stop looking through roads if srcCity has no one left 0.
         }
@@ -193,7 +188,7 @@ bool Evac::isEvacComplete() //CHANGED: new function checks for people in evacCit
       minDepthIndex = i; //this is the first element of this depth
       minDepth = evacCities[i]->depth; //this is now the mindepth
     }
-    if(evacCities[i]->population + evacCities[i]->evacuees > 0)
+    if(evacCities[i]->evacuees > 0)
     { //we find a city with people in it
       return false;
     }
@@ -222,7 +217,7 @@ void Evac::findOuterRing(int numEvacs)
 
   int numRoads;
   int destCityID;
-  int numOuter = 0;
+  //int numOuter = 0;
   for(int i = 0; i < numEvacs; i++)
   {
     numRoads = evacCities[i]->roadCount;
@@ -232,13 +227,13 @@ void Evac::findOuterRing(int numEvacs)
       if(!cityList[destCityID].isEvacCity)
       {
         evacCities[i]->depth = 0;
-        numOuter++;
+        //numOuter++;
         break;
       }
     }
 
   }
-  cout << numOuter << endl;
+  //cout << numOuter << endl;
 }
 
 int comprar(const void* p1, const void* p2)
@@ -259,13 +254,13 @@ void Evac::calcDepth(int numEvacs)
   findOuterRing(numEvacs); //relies on isEvacCity being properly initialized.
 
   //First, we calculate the depth of all inner evac cities.
-  int evacsQueued = 0;
+  //int evacsQueued = 0;
   for(int i = 0; i < numEvacs; i++)
   {
     if(evacCities[i]->depth == 0)//Put all of the outer ring in a queue
     {
       depthHolder.enqueue(evacCities[i]);
-      evacsQueued++;
+      //evacsQueued++;
     }
   }
 
@@ -281,7 +276,7 @@ void Evac::calcDepth(int numEvacs)
       {
         adjCity->depth = nextDepth;
         depthHolder.enqueue(adjCity);
-        evacsQueued++;
+        //evacsQueued++;
       }
     }
   }
