@@ -36,7 +36,7 @@ Evac::Evac(City *citie, int numCitie, int numRoad) : numCities(numCitie), numRoa
     cityList[i].roads = new Road[cityList[i].roadCount];
     for(int j = 0; j < cityList[i].roadCount; j++) //deep copy all roads
     {
-      cityList[i].roads[j] = citie->roads[j];
+      cityList[i].roads[j] = citie[i].roads[j];
     }
   }
 } // Evac()
@@ -208,6 +208,7 @@ void Evac::findOuterRing(int numEvacs)
 
   int numRoads;
   int destCityID;
+  int numOuter = 0;
   for(int i = 0; i < numEvacs; i++)
   {
     numRoads = evacCities[i]->roadCount;
@@ -217,11 +218,13 @@ void Evac::findOuterRing(int numEvacs)
       if(!cityList[destCityID].isEvacCity)
       {
         evacCities[i]->depth = 0;
+        numOuter++;
         break;
       }
     }
 
   }
+  cout << numOuter << endl;
 }
 
 int comprar(const void* p1, const void* p2)
