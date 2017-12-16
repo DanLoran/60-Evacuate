@@ -116,12 +116,6 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
       adjCity = &cityList[adjCityID];
       if(validERoute(curCity, adjCity)) //check that adj has greater depth
       {
-        //add adjCity to the queue if need be.
-        if(!cityVisited[adjCityID])
-        { //city has not been enqueued
-          bfsQueue.enqueue(adjCity);
-          cityVisited[adjCityID] = true; //now its been visited
-        }
         //write the evacRoute
         curRoad = curCity->roads[i];
         int pplMoved;
@@ -140,7 +134,12 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
           pplMoved = min(pplMoved, adjCity->population - adjCity->evacuees); ////find max people that can move to adjCity
         }
         else
-        {
+        { //city is full need to enqueue
+          if(!cityVisited[adjCityID])
+          { //city has not been enqueued
+            bfsQueue.enqueue(adjCity);
+            cityVisited[adjCityID] = true; //now its been visited
+          }
           continue; //don't make evacRoute
         }
         //we have people to put in our evacRoute
@@ -164,6 +163,12 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         }
         evacRoutes[routeCount] = eRoute;
         routeCount++;
+        //add adjCity to the queue if need be.
+        if(!cityVisited[adjCityID] && (adjCity->evacuees + (adjCity->population * adjCity->isEvacCity)) > 0)
+        { //city has not been enqueued
+          bfsQueue.enqueue(adjCity);
+          cityVisited[adjCityID] = true; //now its been visited
+        }
 
         if((curCity->evacuees + (curCity->population * curCity->isEvacCity)) <= 0)
         {
