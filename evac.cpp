@@ -242,11 +242,13 @@ void Evac::calcDepth(int numEvacs)
   findOuterRing(numEvacs); //relies on isEvacCity being properly initialized.
 
   //First, we calculate the depth of all inner evac cities.
+  int evacsQueued = 0;
   for(int i = 0; i < numEvacs; i++)
   {
     if(evacCities[i]->depth == 0)//Put all of the outer ring in a queue
     {
       depthHolder.enqueue(evacCities[i]);
+      evacsQueued++;
     }
   }
 
@@ -262,6 +264,7 @@ void Evac::calcDepth(int numEvacs)
       {
         adjCity->depth = nextDepth;
         depthHolder.enqueue(adjCity);
+        evacsQueued++;
       }
     }
   }
