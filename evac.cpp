@@ -217,17 +217,23 @@ void Evac::findOuterRing(int numEvacs)
 
   int numRoads;
   int destCityID;
-  //int numOuter = 0;
+  int numOuter = 0;
+  int numSafeRoads;
   for(int i = 0; i < numEvacs; i++)
   {
     numRoads = evacCities[i]->roadCount;
+    numSafeRoads = 0;
     for(int j = 0; j < numRoads; j++)
     {
       destCityID = evacCities[i]->roads[j].destinationCityID;
       if(!cityList[destCityID].isEvacCity)
       {
+        numSafeRoads++;
+      }
+      if(numSafeRoads > 5)
+      {
         evacCities[i]->depth = 0;
-        //numOuter++;
+        numOuter++;
         break;
       }
     }
