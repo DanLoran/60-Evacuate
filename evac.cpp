@@ -24,6 +24,23 @@ MyCity MyCity::operator = (City const &oldCity)
   return *this;
 }
 
+MyCity MyCity::operator = (MyCity const &oldCity)
+{
+  ID = oldCity.ID;
+  x = oldCity.x;
+  y = oldCity.y;
+  roadCount = oldCity.roadCount;
+  population = oldCity.population;
+  evacuees = oldCity.evacuees;
+
+  roads = new Road[roadCount];
+  for(int j = 0; j < roadCount; j++) //deep copy all roads
+  {
+    roads[j] = oldCity.roads[j];
+  }
+  return *this;
+}
+
 Evac::Evac(City *citie, int numCitie, int numRoad) : numCities(numCitie), numRoadIDs(numRoad * 2), time(1)
 {
   //change the name to cityAr later
