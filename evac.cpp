@@ -69,9 +69,10 @@ void Evac::evacuate(int *evacIDs, int numEvac, EvacRoute *evacRoutes,
         vacateEvac(curECity, routeCount, evacRoutes);
         //CHANGED: removed check for empty city and nulling ptrs
       }
-      resetUsed(); //reset roads visited to false
+
     }*/
     bfsEvac(minDepth, routeCount, evacRoutes); // NOTE still writing
+    resetUsed(); //reset roads visited to false
     //updateMinDepth();//   NOTE should be done in isEvacComplete needs to be written. Updates minDepth if need be, should also update minDepthIndex.
     time++;
     //cout << "Time Incremented" << endl;
@@ -160,14 +161,13 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         evacRoutes[routeCount] = eRoute;
         routeCount++;
 
-        if((adjCity->evacuees + adjCity->population) <= 0)
+        if((curCity->evacuees + curCity->population) <= 0)
         {
           break; //Stop looking through roads if srcCity has no one left 0.
         }
       }
     }
   }
-  //Then reset cityVistied.
 }
 
 bool Evac::isEvacComplete() //CHANGED: new function checks for people in evacCities
