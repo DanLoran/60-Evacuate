@@ -145,7 +145,8 @@ void Evac::bfsEvac(int minDepth, int &routeCount, EvacRoute* evacRoutes)
         //we have people to put in our evacRoute
         if(pplMoved == 0)
         {
-          cout << "WE FUCKED UP BOYS" << endl;
+          //cout << "WE FUCKED UP BOYS" << endl;
+          continue;
         }
         eRoute.numPeople = pplMoved;
         adjCity->evacuees += pplMoved;
