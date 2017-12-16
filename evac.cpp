@@ -16,28 +16,11 @@ MyCity MyCity::operator = (City const &oldCity)
   population = oldCity.population;
   evacuees = oldCity.evacuees;
 
-  roads = new Road[roadCount];
+  /*roads = new Road[roadCount];
   for(int j = 0; j < roadCount; j++) //deep copy all roads
   {
     roads[j] = oldCity.roads[j];
-  }
-  return *this;
-}
-
-MyCity MyCity::operator = (MyCity const &oldCity)
-{
-  ID = oldCity.ID;
-  x = oldCity.x;
-  y = oldCity.y;
-  roadCount = oldCity.roadCount;
-  population = oldCity.population;
-  evacuees = oldCity.evacuees;
-
-  roads = new Road[roadCount];
-  for(int j = 0; j < roadCount; j++) //deep copy all roads
-  {
-    roads[j] = oldCity.roads[j];
-  }
+  }*/
   return *this;
 }
 
@@ -50,6 +33,11 @@ Evac::Evac(City *citie, int numCitie, int numRoad) : numCities(numCitie), numRoa
   for(int i = 0; i < numCities; i++)
   {
     cityList[i] = citie[i]; //copy city into MyCity class
+    cityList[i].roads = new Road[cityList[i].roadCount];
+    for(int j = 0; j < cityList[i].roadCount; j++) //deep copy all roads
+    {
+      cityList[i].roads[j] = citie->roads[j];
+    }
   }
 } // Evac()
 

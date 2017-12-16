@@ -19,7 +19,6 @@ public:
   MyCity() : evacuees(0), roads(NULL), roadCount(0), depth(-9001), isEvacCity(false){}
   //MyCity(City oldCity);
   MyCity operator = (City const &oldCity);
-  MyCity operator = (MyCity const &oldCity);
   ~MyCity(){delete [] roads;}
 };
 
